@@ -1,19 +1,101 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, Container, Icon, Text, View } from 'native-base';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+import { AppLoader } from './Components/AppLoader';
+import GlobalContext from './Services/Context/GlobalContext';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Home } from './Containers/Home';
+import { IncomeStreams } from './Containers/IncomeStreams';
+import { MoneyTargets } from './Containers/MoneyTargets';
+import { Investments } from './Containers/Investments';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+type Props = {}
+
+type State = {
+  isReady: boolean,
+  data: any
+};
+
+const Stack = createStackNavigator();
+
+export default class App extends React.Component<Props,State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      isReady: false,
+      data: {}
+    };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      ...Ionicons.font,
+    });
+    setTimeout(() => {
+      this.setState({ isReady: true });
+    },2000);
+    
+  }
+
+  setData(data: any){
+    this.setState({ data });
+  }
+
+  render() {
+    if (!this.state.isReady) {
+      return <View style={{paddingTop: 100}}>
+        <AppLoader />
+      </View>;
+    }
+
+    return (
+      <Container>
+        <GlobalContext.Provider value={{data: this.state.data, setData: this.setData}}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen 
+              name="Income Streams" 
+              component={IncomeStreams} 
+              options={({ navigation, route }) => ({
+                headerShown: false,
+                headerRight: () => (
+                  <Button
+                    onPress={() => navigation.navigate('Create Income Stream')}
+                    color="#fff"
+                    transparent
+                  ><Icon name='md-add-outline' /></Button>
+                )
+              })}
+            />
+            <Stack.Screen 
+              name="Money Targets" 
+              component={MoneyTargets} 
+              options={({ navigation, route }) => ({
+                headerShown: false
+              })}
+            />
+            <Stack.Screen 
+              name="Investments" 
+              component={Investments} 
+              options={({ navigation, route }) => ({
+                headerShown: false,
+                headerRight: () => (
+                  <Button
+                    onPress={() => navigation.navigate('Create Investments')}
+                    color="#fff"
+                    transparent
+                  ><Icon name='md-add-outline' /></Button>
+                )
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+        </GlobalContext.Provider>
+      </Container>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
