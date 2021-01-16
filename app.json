@@ -1,0 +1,12 @@
+{
+  "name": "money-target",
+  "displayName": "money-target",
+  "expo": {
+    "name": "money-target",
+    "slug": "money-target",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
