@@ -1,6 +1,6 @@
 import { Basis } from "../lib";
 
-interface IncomeStreamInterface {
+export interface IncomeStreamInterface {
   name: string;
   amount: number;
   basis: Basis

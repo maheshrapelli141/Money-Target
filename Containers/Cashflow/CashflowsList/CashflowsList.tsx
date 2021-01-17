@@ -2,12 +2,12 @@ import { Body, Button, Icon, Left, List, ListItem, SwipeRow, Text } from 'native
 import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import investmentsService from '../../../Services/InvestmentsService/investments.service';
+import cashflowsService from '../../../Services/CashflowsService/cashflows.service';
 
-export const InvestmentsList = () => {
+export const CashflowsList = () => {
   return <ScrollView>
      <FlatList
-      data={investmentsService.investments}
+      data={cashflowsService.cashflows}
       renderItem={({item}) => <SwipeRow
         rightOpenValue={-75}
         right={
@@ -16,7 +16,7 @@ export const InvestmentsList = () => {
               "Confirm",
               `Are you sure to delete ${item.name}`,
               [
-                { text: "Yes", onPress: () => investmentsService.remove(item.name) }
+                { text: "Yes", onPress: () => cashflowsService.remove(item.name) }
               ],
               { cancelable: false }
             );
@@ -32,7 +32,7 @@ export const InvestmentsList = () => {
             </Left>
             <Body>
               <Text style={style.amountText}>Rs. {item.amount}</Text>
-              <Text style={style.amountText}>Basis: {item.basis}</Text>
+              {/* <Text style={style.amountText}>Basis: {item.basis}</Text> */}
             </Body>
           </>
         }

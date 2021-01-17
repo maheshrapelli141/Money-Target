@@ -1,7 +1,6 @@
 import { Button, Form, Input, Item, Text, View, Picker, Icon, Toast } from 'native-base';
 import React, { useState } from 'react';
-import incomeStreamsService from '../../../Services/IncomeStreamsService/income-streams.service';
-// import {Picker} from '@react-native-picker/picker';
+import investmentsService from '../../../Services/InvestmentsService/investments.service';
 import { Basis } from '../../../Services/lib';
 
 
@@ -27,7 +26,7 @@ export const CreateInvestment = () => {
   function submit(){
     console.log('validate',validate())
     if(validate()){
-      incomeStreamsService.add({
+      investmentsService.add({
         name,amount: Number(amount),basis
       });
       // setSubmissionMessage('Income Stream Added');
