@@ -6,7 +6,7 @@ import incomeStreamService from '../../../Services/IncomeStreamsService/income-s
 
 
 
-export const IncomeStreamsList = () => {
+export const InvestmentsList = () => {
   return <ScrollView>
      <FlatList
       data={incomeStreamService.incomeStreams}

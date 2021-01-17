@@ -39,6 +39,15 @@ export const Home = () => {
       >
       <Text>Investments</Text>
     </Button>
+    <Button 
+      bordered
+      style={style.button}
+      rounded
+      block
+      onPress={() => navigation.navigate('Cashflow')}
+      >
+      <Text>Cashflow</Text>
+    </Button>
   </View>
 }
 

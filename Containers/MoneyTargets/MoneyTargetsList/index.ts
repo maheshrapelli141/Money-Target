@@ -1,0 +1,1 @@
+export { MoneyTargetsList } from './MoneyTargetsList';

@@ -5,7 +5,7 @@ import incomeStreamsService from '../../../Services/IncomeStreamsService/income-
 import { Basis } from '../../../Services/lib';
 
 
-export const CreateIncomeStream = () => {
+export const CreateInvestment = () => {
   const [basis,setBasis] = useState(Basis.MONTHLY);
   const [name,setName] = useState('');
   const [amount,setAmount] = useState('');

@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Button, Container, Icon, Text, View } from 'native-base';
+import { Button, Container, Icon, Root, Text, View } from 'native-base';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { AppLoader } from './Components/AppLoader';
@@ -11,6 +11,7 @@ import { Home } from './Containers/Home';
 import { IncomeStreams } from './Containers/IncomeStreams';
 import { MoneyTargets } from './Containers/MoneyTargets';
 import { Investments } from './Containers/Investments';
+import { Cashflow } from './Containers/Cashflow/Cashflow';
 
 type Props = {}
 
@@ -52,6 +53,7 @@ export default class App extends React.Component<Props,State> {
     }
 
     return (
+      <Root>
       <Container>
         <GlobalContext.Provider value={{data: this.state.data, setData: this.setData}}>
         <NavigationContainer>
@@ -61,14 +63,7 @@ export default class App extends React.Component<Props,State> {
               name="Income Streams" 
               component={IncomeStreams} 
               options={({ navigation, route }) => ({
-                headerShown: false,
-                headerRight: () => (
-                  <Button
-                    onPress={() => navigation.navigate('Create Income Stream')}
-                    color="#fff"
-                    transparent
-                  ><Icon name='md-add-outline' /></Button>
-                )
+                headerShown: false
               })}
             />
             <Stack.Screen 
@@ -82,20 +77,21 @@ export default class App extends React.Component<Props,State> {
               name="Investments" 
               component={Investments} 
               options={({ navigation, route }) => ({
-                headerShown: false,
-                headerRight: () => (
-                  <Button
-                    onPress={() => navigation.navigate('Create Investments')}
-                    color="#fff"
-                    transparent
-                  ><Icon name='md-add-outline' /></Button>
-                )
+                headerShown: false
+              })}
+            />
+            <Stack.Screen 
+              name="Cashflow" 
+              component={Cashflow} 
+              options={({ navigation, route }) => ({
+                headerShown: false
               })}
             />
           </Stack.Navigator>
         </NavigationContainer>
         </GlobalContext.Provider>
       </Container>
+      </Root>
     );
   }
 }

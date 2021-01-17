@@ -1,6 +1,6 @@
 export enum Basis {
-  'DAILY',
-  'MONTHLY',
-  'YEARLY',
-  'LIFETIME'
+  DAILY = 'Daily',
+  MONTHLY = 'Monthly',
+  YEARLY = 'Yearly',
+  LIFETIME = 'Lifetime'
 }
