@@ -11,6 +11,7 @@ export const CreateIncomeStream = () => {
   const [amount,setAmount] = useState('');
   const [nameError,setNameError] = useState('');
   const [amountError,setAmountError] = useState('');
+  const [submitting,setSubmitting] = useState(false);
 
   function validate(){
     if(!name?.length) setNameError('Please enter name of income');
@@ -26,6 +27,7 @@ export const CreateIncomeStream = () => {
 
   async function submit(){
     if(validate()){
+      await setSubmitting(true);
       await incomeStreamsService.add({
         id: uuid.v1(),
         name,
@@ -33,6 +35,8 @@ export const CreateIncomeStream = () => {
         basis,
         deleted: false
       });
+
+      await setSubmitting(false);
       clearFormValues();
       Toast.show({
         text: 'Income Stream Added',
@@ -77,6 +81,7 @@ export const CreateIncomeStream = () => {
         success 
         style={{marginTop: 15,marginLeft: 10}}
         onPress={submit}
+        disabled={submitting}
         >
         <Text>Submit</Text>
       </Button>

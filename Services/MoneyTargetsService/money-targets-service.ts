@@ -1,26 +1,30 @@
 import { Basis } from "../lib";
 import { MoneyTargetInterface } from "./interfaces";
+import firebase from '../firebase';
 
 class MoneyTargetsService {
-  moneyTargets: MoneyTargetInterface[] = [
-    {
-      name: 'Home',
-      amount: 1500000,
-      basis: Basis.LIFETIME
-    }
-  ];
+  moneyTargetsRef = firebase.firestore().collection('moneytargets');
 
-  add(stream: MoneyTargetInterface){
-    this.moneyTargets.push(stream);
+  async getAll(){
+    const querySnapshot = await this.moneyTargetsRef.where('deleted','==',false).get();
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name,
+        amount: data.amount,
+        basis: data.basis,
+        deleted: data.deleted
+      }
+    });
   }
 
-  remove(streamName: string){
-    this.moneyTargets
-      .splice(
-        this.moneyTargets.findIndex((value,i) => {
-          if(value.name === streamName) 
-            return i;
-        }),1);
+  async add(stream: MoneyTargetInterface){
+    return await this.moneyTargetsRef.add(stream);
+  }
+
+  remove(id: string){
+    this.moneyTargetsRef.doc(id).update({ deleted: true });
   }
 }
 

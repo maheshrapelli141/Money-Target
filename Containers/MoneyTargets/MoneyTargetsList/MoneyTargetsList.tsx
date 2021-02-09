@@ -1,13 +1,18 @@
 import { Body, Button, Icon, Left, List, ListItem, SwipeRow, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { MoneyTargetInterface } from '../../../Services/MoneyTargetsService/interfaces';
 import moneyTargetsService from '../../../Services/MoneyTargetsService/money-targets-service';
 
 export const MoneyTargetsList = () => {
+  const [data,setData] = useState<MoneyTargetInterface[]>([]);
+
+  moneyTargetsService.getAll().then(targets => setData(targets));
+
   return <ScrollView>
      <FlatList
-      data={moneyTargetsService.moneyTargets}
+      data={data}
       renderItem={({item}) => <SwipeRow
         rightOpenValue={-75}
         right={
@@ -16,7 +21,7 @@ export const MoneyTargetsList = () => {
               "Confirm",
               `Are you sure to delete ${item.name}`,
               [
-                { text: "Yes", onPress: () => moneyTargetsService.remove(item.name) }
+                { text: "Yes", onPress: () => moneyTargetsService.remove(item.id) }
               ],
               { cancelable: false }
             );

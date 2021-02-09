@@ -32,8 +32,6 @@ class IncomeStreamsService {
   }
 
   remove(id: string){
-    console.log({id});
-    
     this.incomeStreamRef.doc(id).update({ deleted: true });
   }
 }
