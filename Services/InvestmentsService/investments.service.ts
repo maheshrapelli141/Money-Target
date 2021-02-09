@@ -1,26 +1,30 @@
 import { Basis } from "../lib";
 import { InvestmentInterface } from "./interfaces";
+import firebase from '../firebase';
 
 class InvestmentsService {
-  investments: InvestmentInterface[] = [
-    {
-      name: 'Wazirx',
-      amount: 9000,
-      basis: Basis.LIFETIME
-    }
-  ];
+  investmentsRef = firebase.firestore().collection('investments');
 
-  add(stream: InvestmentInterface){
-    this.investments.push(stream);
+  async getAll(): Promise<InvestmentInterface[]>{
+    const querySnapshot = await this.investmentsRef.where('deleted','==',false).get();
+    return querySnapshot.docs.map(doc =>{
+      const data = doc.data();
+      return{
+        id: doc.id,
+        name: data.name,
+        amount: data.amount,
+        basis: data.basis,
+        deleted: data.deleted,
+      } as InvestmentInterface;
+    });
   }
 
-  remove(streamName: string){
-    this.investments
-      .splice(
-        this.investments.findIndex((value,i) => {
-          if(value.name === streamName) 
-            return i;
-        }),1);
+  async add(stream: InvestmentInterface){
+    return await this.investmentsRef.add(stream);
+  }
+
+  async remove(id: string){
+    return await this.investmentsRef.doc(id).update({ deleted: true });
   }
 }
 

@@ -1,13 +1,22 @@
 import { Body, Button, Icon, Left, List, ListItem, SwipeRow, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { InvestmentInterface } from '../../../Services/InvestmentsService/interfaces';
 import investmentsService from '../../../Services/InvestmentsService/investments.service';
 
 export const InvestmentsList = () => {
+  const [data,setData] = useState<InvestmentInterface[]>([]);
+
+  investmentsService
+    .getAll()
+    .then(investments => {
+      setData(investments);
+    });
+
   return <ScrollView>
      <FlatList
-      data={investmentsService.investments}
+      data={data}
       renderItem={({item}) => <SwipeRow
         rightOpenValue={-75}
         right={
@@ -16,9 +25,9 @@ export const InvestmentsList = () => {
               "Confirm",
               `Are you sure to delete ${item.name}`,
               [
-                { text: "Yes", onPress: () => investmentsService.remove(item.name) }
+                { text: "Yes", onPress: () => investmentsService.remove(item.id) }
               ],
-              { cancelable: false }
+              { cancelable: true }
             );
               
           }} >

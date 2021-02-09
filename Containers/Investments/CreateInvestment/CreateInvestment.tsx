@@ -1,5 +1,6 @@
 import { Button, Form, Input, Item, Text, View, Picker, Icon, Toast } from 'native-base';
 import React, { useState } from 'react';
+import uuid from 'react-native-uuid';
 import investmentsService from '../../../Services/InvestmentsService/investments.service';
 import { Basis } from '../../../Services/lib';
 
@@ -10,6 +11,7 @@ export const CreateInvestment = () => {
   const [amount,setAmount] = useState('');
   const [nameError,setNameError] = useState('');
   const [amountError,setAmountError] = useState('');
+  const [submitting,setSubmitting] = useState(false);
 
   function validate(){
     if(!name?.length) setNameError('Please enter name of income');
@@ -23,13 +25,20 @@ export const CreateInvestment = () => {
     return !nameError?.length && !amountError.length;
   }
 
-  function submit(){
-    console.log('validate',validate())
+  async function submit(){
     if(validate()){
-      investmentsService.add({
-        name,amount: Number(amount),basis
+      await setSubmitting(true);
+      await investmentsService.add({
+        id: uuid.v1(),
+        name,
+        amount: Number(amount),
+        basis,
+        deleted: false
       });
-      // setSubmissionMessage('Income Stream Added');
+
+      await setSubmitting(false);
+      clearFields();
+
       Toast.show({
         text: 'Income Stream Added',
         duration: 1500
@@ -37,15 +46,20 @@ export const CreateInvestment = () => {
     }
   }
 
+  function clearFields(){
+    setAmount('');
+    setName('');
+  }
+
   return <View>
     <Form>
       <Item floatingLabel error={nameError?.length !== 0}>
-        <Input placeholder="Name" onChangeText={setName}/>
+        <Input placeholder="Name" onChangeText={setName} value={name} disabled={submitting}/>
         {nameError?.length ? <Icon name='close-circle' /> : null}
       </Item>
         {nameError ? <Text>{nameError}</Text> : null  }
       <Item floatingLabel error={amountError?.length !== 0}>
-        <Input placeholder="Amount" keyboardType='number-pad' onChangeText={setAmount} />
+        <Input placeholder="Amount" keyboardType='number-pad' value={amount} onChangeText={setAmount} disabled={submitting}/>
         {amountError?.length ? <Icon name='close-circle' /> : null}
       </Item>
         {amountError ? <Text>{amountError}</Text> : null}
@@ -68,6 +82,7 @@ export const CreateInvestment = () => {
         success 
         style={{marginTop: 15,marginLeft: 10}}
         onPress={submit}
+        disabled={submitting}
         >
         <Text>Submit</Text>
       </Button>

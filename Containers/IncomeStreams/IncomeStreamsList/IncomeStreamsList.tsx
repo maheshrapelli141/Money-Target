@@ -29,7 +29,7 @@ export const IncomeStreamsList = () => {
               [
                 { text: "Yes", onPress: () => incomeStreamService.remove(item.id) }
               ],
-              { cancelable: false }
+              { cancelable: true }
             );
               
           }} >

@@ -23,7 +23,7 @@ class IncomeStreamsService {
         amount: data.amount,
         basis: data.basis,
         deleted: data.deleted,
-      };
+      } as IncomeStreamInterface;
     });
   }
 

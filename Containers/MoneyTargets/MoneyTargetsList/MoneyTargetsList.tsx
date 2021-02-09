@@ -23,7 +23,7 @@ export const MoneyTargetsList = () => {
               [
                 { text: "Yes", onPress: () => moneyTargetsService.remove(item.id) }
               ],
-              { cancelable: false }
+              { cancelable: true }
             );
               
           }} >
