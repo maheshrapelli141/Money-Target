@@ -1,7 +1,7 @@
 import { Button, Form, Input, Item, Text, View, Picker, Icon, Toast } from 'native-base';
 import React, { useState } from 'react';
 import incomeStreamsService from '../../../Services/IncomeStreamsService/income-streams.service';
-// import {Picker} from '@react-native-picker/picker';
+import uuid from "react-native-uuid";
 import { Basis } from '../../../Services/lib';
 
 
@@ -24,13 +24,16 @@ export const CreateIncomeStream = () => {
     return !nameError?.length && !amountError.length;
   }
 
-  function submit(){
-    console.log('validate',validate())
+  async function submit(){
     if(validate()){
-      incomeStreamsService.add({
-        name,amount: Number(amount),basis
+      await incomeStreamsService.add({
+        id: uuid.v1(),
+        name,
+        amount: Number(amount),
+        basis,
+        deleted: false
       });
-      // setSubmissionMessage('Income Stream Added');
+      clearFormValues();
       Toast.show({
         text: 'Income Stream Added',
         duration: 1500
@@ -38,15 +41,20 @@ export const CreateIncomeStream = () => {
     }
   }
 
+  function clearFormValues(){
+    setAmount('');
+    setName('');
+  }
+
   return <View>
     <Form>
       <Item floatingLabel error={nameError?.length !== 0}>
-        <Input placeholder="Name" onChangeText={setName}/>
+        <Input placeholder="Name" onChangeText={setName} value={name}/>
         {nameError?.length ? <Icon name='close-circle' /> : null}
       </Item>
         {nameError ? <Text>{nameError}</Text> : null  }
       <Item floatingLabel error={amountError?.length !== 0}>
-        <Input placeholder="Amount" keyboardType='number-pad' onChangeText={setAmount} />
+        <Input placeholder="Amount" keyboardType='number-pad' onChangeText={setAmount} value={amount}/>
         {amountError?.length ? <Icon name='close-circle' /> : null}
       </Item>
         {amountError ? <Text>{amountError}</Text> : null}

@@ -1,15 +1,24 @@
 import { Body, Button, Icon, Left, List, ListItem, SwipeRow, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import incomeStreamService from '../../../Services/IncomeStreamsService/income-streams.service';
+import incomeStreamService, { IncomeStreamInterface } from '../../../Services/IncomeStreamsService/income-streams.service';
 
 
 
 export const IncomeStreamsList = () => {
+  const [data,setData] = useState<IncomeStreamInterface[]>([]);
+
+  incomeStreamService
+    .getAll()
+    .then(streams => {
+      setData(streams);
+    });
+  
+
   return <ScrollView>
      <FlatList
-      data={incomeStreamService.incomeStreams}
+      data={data}
       renderItem={({item}) => <SwipeRow
         rightOpenValue={-75}
         right={
@@ -18,7 +27,7 @@ export const IncomeStreamsList = () => {
               "Confirm",
               `Are you sure to delete ${item.name}`,
               [
-                { text: "Yes", onPress: () => incomeStreamService.remove(item.name) }
+                { text: "Yes", onPress: () => incomeStreamService.remove(item.id) }
               ],
               { cancelable: false }
             );

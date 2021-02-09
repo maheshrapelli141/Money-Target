@@ -1,31 +1,40 @@
 import { Basis } from "../lib";
+import firebase from '../firebase';
+
 
 export interface IncomeStreamInterface {
+  id: string;
   name: string;
   amount: number;
-  basis: Basis
+  basis: Basis;
+  deleted: boolean;
 }
 
 class IncomeStreamsService {
-  incomeStreams: IncomeStreamInterface[] = [
-    {
-      name: 'Salary',
-      amount: 25000,
-      basis: Basis.MONTHLY
-    }
-  ];
+  incomeStreamRef = firebase.firestore().collection('incomestreams');
 
-  add(stream: IncomeStreamInterface){
-    this.incomeStreams.push(stream);
+  async getAll(): Promise<IncomeStreamInterface[]>{
+    const querySnapshot = await this.incomeStreamRef.where('deleted','==',false).get();
+    return querySnapshot.docs.map(doc =>{
+      const data = doc.data();
+      return{
+        id: doc.id,
+        name: data.name,
+        amount: data.amount,
+        basis: data.basis,
+        deleted: data.deleted,
+      };
+    });
   }
 
-  remove(streamName: string){
-    this.incomeStreams
-      .splice(
-        this.incomeStreams.findIndex((value,i) => {
-          if(value.name === streamName) 
-            return i;
-        }),1);
+  add(stream: IncomeStreamInterface){
+    return this.incomeStreamRef.add(stream);
+  }
+
+  remove(id: string){
+    console.log({id});
+    
+    this.incomeStreamRef.doc(id).update({ deleted: true });
   }
 }
 

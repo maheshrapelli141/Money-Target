@@ -38,7 +38,6 @@ export default class App extends React.Component<Props,State> {
     setTimeout(() => {
       this.setState({ isReady: true });
     },2000);
-    
   }
 
   setData(data: any){
