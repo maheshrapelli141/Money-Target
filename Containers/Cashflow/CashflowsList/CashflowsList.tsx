@@ -1,13 +1,17 @@
 import { Body, Button, Icon, Left, List, ListItem, SwipeRow, Text } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import cashflowsService from '../../../Services/CashflowsService/cashflows.service';
+import cashflowsService, { CashflowInterface } from '../../../Services/CashflowsService/cashflows.service';
 
 export const CashflowsList = () => {
+  const [data,setData] = useState<CashflowInterface[]>([]);
+
+  cashflowsService.getAll().then(flows => setData(flows));
+
   return <ScrollView>
      <FlatList
-      data={cashflowsService.cashflows}
+      data={data}
       renderItem={({item}) => <SwipeRow
         rightOpenValue={-75}
         right={
@@ -16,9 +20,9 @@ export const CashflowsList = () => {
               "Confirm",
               `Are you sure to delete ${item.name}`,
               [
-                { text: "Yes", onPress: () => cashflowsService.remove(item.name) }
+                { text: "Yes", onPress: () => cashflowsService.remove(item.id) }
               ],
-              { cancelable: false }
+              { cancelable: true }
             );
               
           }} >
